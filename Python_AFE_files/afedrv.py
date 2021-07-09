@@ -109,11 +109,11 @@ def SetDacRAW(id, val1, val2):
 	#can.recv(0, lst)
 
 def SetDac(id, val1, val2):
-	print("Jestem AFE_SetDac()\n")
+	#print("Jestem AFE_SetDac()\n")
 	#convert data
 	val1conv = (-271.2)*val1 + 18142
 	val2conv = (-271.2)*val2 + 18142
-	print("dac1: ",int(val1conv),"dac2: ",int(val2conv))
+	#print("dac1: ",int(val1conv),"dac2: ",int(val2conv))
 	can = pyb.CAN(1)
 	can.init(pyb.CAN.NORMAL,extframe=False,prescaler=54,sjw=1,bs1=7,bs2=2,auto_restart=True)
 	#Set filer - all responses to FIFO 0
@@ -132,8 +132,9 @@ def SetDac(id, val1, val2):
 	buf2 = bytearray(8)
 	lst = [0, 0, 0, memoryview(buf)]
 	# No heap memory is allocated in the following call
-	print(can.recv(0))
+	#print(can.recv(0))
 	#can.recv(0, lst)
+	return (val1conv,val2conv)
 
 def GetTemp(id):
 	print("Jestem AFE_Temp()\n")
@@ -158,7 +159,7 @@ def GetTemp(id):
 	print("temp value 2: ", TempVal2, "bits")
 
 def SetDigRes(id, ch, val):
-	print("Jestem SetDigRes()\n")
+	#print("Jestem SetDigRes()\n")
 	#convert data
 	can = pyb.CAN(1)
 	can.init(pyb.CAN.NORMAL,extframe=False,prescaler=54,sjw=1,bs1=7,bs2=2,auto_restart=True)
@@ -176,9 +177,9 @@ def SetDigRes(id, ch, val):
 	buf2 = bytearray(8)
 	lst = [0, 0, 0, memoryview(buf)]
 	# No heap memory is allocated in the following call
-	print(can.recv(0))
+	#print(can.recv(0))
 	#can.recv(0, lst)
-
+	
 def SetHV(id, val):
 	print("Jestem SetHV()\n")
 	#convert data
@@ -204,7 +205,7 @@ def SetHV(id, val):
 	#can.recv(0, lst)
 
 def SetAllHV(id):
-	print("Jestem SetHV()\n")
+	#print("Jestem SetHV()\n")
 	#convert data
 	can = pyb.CAN(1)
 	can.init(pyb.CAN.NORMAL,extframe=False,prescaler=54,sjw=1,bs1=7,bs2=2,auto_restart=True)
@@ -220,12 +221,14 @@ def SetAllHV(id):
 	buf[4] = 0
 	buf[5] = 3
 	can.send(buf,id)
-	time.sleep(1)
+	time.sleep(1) #change and check
 	# buf2 = bytearray(8)
 	# lst = [0, 0, 0, memoryview(buf)]
 	# No heap memory is allocated in the following call
-	print(can.recv(0))
+	#print(can.recv(0))
 	#can.recv(0, lst)
+	#return "HVON"
+
 
 def ClrHV(id, val):
 	print("Jestem ClrHV()\n")
@@ -252,7 +255,7 @@ def ClrHV(id, val):
 	#can.recv(0, lst)
 
 def ClrAllHV(id):
-	print("Jestem ClrHV()\n")
+	#print("Jestem ClrHV()\n")
 	#convert data
 	can = pyb.CAN(1)
 	can.init(pyb.CAN.NORMAL,extframe=False,prescaler=54,sjw=1,bs1=7,bs2=2,auto_restart=True)
@@ -268,12 +271,13 @@ def ClrAllHV(id):
 	buf[4] = 0
 	buf[5] = 3
 	can.send(buf,id)
-	time.sleep(1)
+	time.sleep(1) #change and check 
 	# buf2 = bytearray(8)
 	# lst = [0, 0, 0, memoryview(buf)]
 	# No heap memory is allocated in the following call
-	print(can.recv(0))
+	#print(can.recv(0))
 	#can.recv(0, lst)
+	#return "HVOFF"
 
 def GetHV(id, val):
 	print("Jestem GetHV()\n")

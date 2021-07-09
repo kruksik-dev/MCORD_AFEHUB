@@ -2,30 +2,41 @@ import network
 import _thread
 import usocket
 import ujson
+from . misc import HVoff,HVon,init
+from . afedrv import SetDac
 
-CMD_LIMIT=30
+CMD_LIMIT=300
 #Functions which process requests
-def remote_mult(obj):
-  return ('OK', obj[1]*obj[2])
-  
-def sum_vals(obj):
-  res = 0
-  for v in obj[1:]:
-      res += v
-  return ('OK', res)
 
-def remote_div(obj):
-  if obj[2] == 0:
-      return ('ERR','I can not divide by 0')
-  return ('OK', obj[1]/obj[2])
+def initialization(obj):
+    res = init(obj[1])
+    return ('OK',res) 
+
+def turn_on(obj):
+    res = HVon(obj[1])
+    return ('OK',res) 
+
+def turn_off(obj):
+    res = HVoff(obj[1])
+    return ('OK',res) 
+
+def set_voltage(obj):
+    res = SetDac(obj[1],obj[2],obj[3])
+    return ('OK',res) 
+
+
 
 #Table of functions
+#func = {'init':initialization,'hvon':turn_on,'hvoff':turn_off,'sethv':set_voltage}
+
 func={
-   'mult':remote_mult,
-   'sum':sum_vals,
-   'div': remote_div,
-  }
-  
+
+    'init':initialization,
+
+    }
+
+
+
 class ctlsrv():
     def __init__(self):
         # Start Ethernet
@@ -43,7 +54,8 @@ class ctlsrv():
         s.bind(addr)
         print(s)
         s.listen(1)
-	print('listening on', addr)
+        print('listening on', addr)
+
         while self.runflag:
             cl, addr = s.accept()
             print('client connected from', addr)
@@ -65,8 +77,8 @@ class ctlsrv():
                 self.send_msg(cl,res)
             cl.close()
     def send_msg(self,cl,msg):
-	cl.sendall(ujson.dumps(msg)+"\n")
-		        
+        cl.sendall(ujson.dumps(msg)+"\n")
+
     def run(self,port):
         if self.srvthread:
             raise(Exception("Server already running"))

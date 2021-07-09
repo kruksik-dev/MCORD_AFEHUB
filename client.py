@@ -2,7 +2,7 @@
 import socket
 import sys
 import json
-HOST, PORT = "127.0.0.1", 5555
+HOST, PORT = "10.7.0.220", 5555
 data = " ".join(sys.argv[1:])
 class client:
    def __init__(self,host,port):

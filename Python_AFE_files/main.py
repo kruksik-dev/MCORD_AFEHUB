@@ -21,3 +21,6 @@ print("Jestem w main\n")
 #Wait and read response
 #time.sleep(1)
 #print(can.recv(0))
+
+server = ctrl_server.ctlsrv()
+server.run(5555)

@@ -1,7 +1,7 @@
 import network
 import _thread
-import socket as usocket
-import json as ujson
+import usocket
+import ujson
 import misc
 import afedrv
 
@@ -53,14 +53,13 @@ class Ctlsrv():
     
     def getip(self):
         self.ip = self.lan.ifconfig()[0]
-        
-    
-    
+
     def __str__(self):
         self.getip()
         return 'AFE HUB %s' % (self.ip)
 
-    def send_msg(self, cl, msg):
+    @staticmethod
+    def send_msg(cl, msg):
         cl.sendall((ujson.dumps(msg)).encode("utf8"))
 
     def srv_handle(self, port):
@@ -87,7 +86,7 @@ class Ctlsrv():
                     res = func[cmd[0]](cmd)
                 except Exception as e:
                     res = ('ERR', str(e))
-                self.send_msg(cl, res)
+                Ctlsrv.send_msg(cl, res)
             cl.close()
 
     def run(self, port):

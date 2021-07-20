@@ -49,7 +49,7 @@ class Ctlsrv():
         # Start server
         self.srvthread = None
         self.runflag = False
-        self.ip = ''
+        self.ip = self.lan.ifconfig()[0]
     
     def getip(self):
         self.ip = self.lan.ifconfig()[0]
@@ -57,13 +57,13 @@ class Ctlsrv():
     def __str__(self):
         self.getip()
         return 'AFE HUB %s' % (self.ip)
+    
 
     @staticmethod
     def send_msg(cl, msg):
         cl.sendall((ujson.dumps(msg)).encode("utf8"))
 
     def srv_handle(self, port):
-        
         addr = usocket.getaddrinfo('0.0.0.0', port)[0][-1]
         print(addr)
         s = usocket.socket(usocket.AF_INET, usocket.SOCK_STREAM)
@@ -73,9 +73,9 @@ class Ctlsrv():
         s.listen(1)
         print('listening on', addr)
         while self.runflag:
-            cl, addr = s.accept()
+            cl,addr = s.accept()
             print('client connected from', addr)
-            self.send_msg(cl, 'Client connected with %s' % (self))
+            Ctlsrv.send_msg(cl, ('Client connected with %s' % (self)))
             while True:
                 json = cl.recv(BUFFER_SIZE)
                 if not json:
@@ -86,8 +86,11 @@ class Ctlsrv():
                     res = func[cmd[0]](cmd)
                 except Exception as e:
                     res = ('ERR', str(e))
+                finally:
+                    cl.close()
                 Ctlsrv.send_msg(cl, res)
             cl.close()
+            
 
     def run(self, port):
         if self.srvthread:

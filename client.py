@@ -8,8 +8,9 @@ class Client:
      self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
      self.sock.connect((host,port))
      res = self.sock.recv(1024)
-     res = json.loads(res)
      print(res)
+     #res = json.loads(res)
+     
    
    def do_cmd(self,obj):
      self.sock.sendall((json.dumps(obj)).encode("utf8"))

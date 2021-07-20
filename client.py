@@ -8,7 +8,9 @@ class Client:
      self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
      self.sock.connect((host,port))
      res = self.sock.recv(1024)
+     
      print(res.decode('utf-8'))
+     
    
      
     

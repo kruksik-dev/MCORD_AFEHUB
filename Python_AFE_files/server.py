@@ -9,7 +9,10 @@ import afedrv
 BUFFER_SIZE = 1024
 # Functions which process requests
 def test_proper_connection(obj):
-    return 'OK', obj[1] * obj[2]
+    if serv:
+        return ('OK','Connected')
+    else:
+        return ('ERR','Not Connected')
 
 def initialization(obj):
     if isinstance(obj[1], list):
@@ -31,6 +34,9 @@ def setdac(obj):
     result = afedrv.SetDac(obj[1],obj[2],obj[3])
     return ('OK', result)
 
+def getsimpiterlopp():
+    pass
+
 # Table of functions
 func = {
     'init': initialization,
@@ -38,6 +44,7 @@ func = {
     'hvoff': turn_off,
     'setdac':setdac,
     'test':test_proper_connection,
+    'getsimploop': getsimpiterlopp,
 }
 
 
@@ -49,7 +56,7 @@ class Ctlsrv():
         # Start server
         self.srvthread = None
         self.runflag = False
-        self.ip = self.lan.ifconfig()[0]
+        self.ip = ''
     
     def getip(self):
         self.ip = self.lan.ifconfig()[0]
@@ -57,6 +64,7 @@ class Ctlsrv():
     def __str__(self):
         self.getip()
         return 'AFE HUB %s' % (self.ip)
+    
     
 
     @staticmethod
@@ -77,19 +85,22 @@ class Ctlsrv():
             print('client connected from', addr)
             Ctlsrv.send_msg(cl, ('Client connected with %s' % (self)))
             while True:
-                json = cl.recv(BUFFER_SIZE)
-                if not json:
+                try:
+                    json = cl.recv(BUFFER_SIZE)
+                except Exception as e:
+                    res = ('ERR', str(e))
                     break
+                
                 try:
                     cmd = ujson.loads(json)
                     print(cmd)
                     res = func[cmd[0]](cmd)
                 except Exception as e:
                     res = ('ERR', str(e))
-                finally:
-                    cl.close()
                 Ctlsrv.send_msg(cl, res)
+
             cl.close()
+            
             
 
     def run(self, port):
@@ -107,5 +118,4 @@ class Ctlsrv():
 
 serv = Ctlsrv()
 serv.run(5555)
-
 

@@ -10,16 +10,17 @@ class Client:
      res = self.sock.recv(1024)
      
      print(res.decode('utf-8'))
-     
-   
-     
-    
-     
-   
+
    def do_cmd(self,obj):
      self.sock.sendall((json.dumps(obj)).encode("utf8"))
      res = self.sock.recv(1024)
-     res = json.loads(res)
-     return res
+     if res:
+         res = json.loads(res)
+         return res
+     else:
+        pass
+   
+   def __del__(self):
+     self.sock.close()
 
 cli = Client(HOST, PORT)

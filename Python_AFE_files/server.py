@@ -7,6 +7,7 @@ import afedrv
 
 
 BUFFER_SIZE = 1024
+DISCONNECTED_MESSAGE = '!disconnect'
 # Functions which process requests
 def test_proper_connection(obj):
     if serv:
@@ -56,7 +57,7 @@ class Ctlsrv():
         # Start server
         self.srvthread = None
         self.runflag = False
-        self.ip = ''
+        self.ip = self.lan.ifconfig()[0]
     
     def getip(self):
         self.ip = self.lan.ifconfig()[0]
@@ -93,7 +94,8 @@ class Ctlsrv():
                 
                 try:
                     cmd = ujson.loads(json)
-                    print(cmd)
+                    print(cmd[0])
+                    if cmd[0] == DISCONNECTED_MESSAGE: break
                     res = func[cmd[0]](cmd)
                 except Exception as e:
                     res = ('ERR', str(e))

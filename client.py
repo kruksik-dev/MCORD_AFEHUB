@@ -1,6 +1,7 @@
 #!/usr/bin/python
 import socket
 import json
+import atexit
 HOST, PORT = "10.7.0.220", 5555
 
 class Client:
@@ -21,6 +22,8 @@ class Client:
         pass
    
    def __del__(self):
-     self.sock.close()
+     self.sock.sendall((json.dumps(['!disconnect']).encode("utf8")))
+     
 
 cli = Client(HOST, PORT)
+atexit.register(cli.__del__)

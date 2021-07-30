@@ -9,31 +9,52 @@ import afedrv
 BUFFER_SIZE = 1024
 DISCONNECTED_MESSAGE = '!disconnect'
 # Functions which process requests
-def test_proper_connection(obj):
+def test_proper_connection():
     if serv:
         return ('OK','Connected')
     else:
         return ('ERR','Not Connected')
+    
+def loop_for_list_arg(func,obj):
+    result = dict()
+    for board in obj:
+        try:
+            result[board] = func(board)
+        except:
+            result[board] = 'ERR'
+    return ('OK', result)
+
+def loop_for_afe_list_arg(func,obj1,obj2,obj3):
+    result = dict()
+    for num,v1,v2 in zip(obj1,obj2,obj3):
+        try:
+            result[num] = func(num,v1,v2)
+        except:
+            result[num] = 'ERR'
+    return ('OK', result)
+   
 
 def initialization(obj):
     if isinstance(obj[1], list):
-        result = dict()
-        for board in obj[1]:
-            result[board] = misc.init(board)
-        return ('OK', result)
-    return ('OK', misc.init(obj[1]))
+        return loop_for_list_arg(misc.init,obj[1])
+    else:
+        return ('OK', misc.init(obj[1]))
 
 def turn_on(obj):
-    result = misc.HVon(obj[1])
-    return('OK', result)
+    if isinstance(obj[1], list):
+        return loop_for_list_arg(misc.HVon,obj[1])
+    else:
+        return('OK', misc.HVon(obj[1]))
 
 def turn_off(obj):
-    result = misc.HVoff(obj[1])
-    return ('OK', result)
+    if isinstance(obj[1], list):
+        return loop_for_list_arg(misc.HVoff,obj[1])
+    return ('OK', misc.HVoff(obj[1]))
 
 def setdac(obj):
-    result = afedrv.SetDac(obj[1],obj[2],obj[3])
-    return ('OK', result)
+    if isinstance(obj[1], list):
+     return loop_for_afe_list_arg(afedrv.SetDac,obj[1],obj[2],obj[3])
+    return ('OK', afedrv.SetDac(obj[1],obj[2],obj[3]))
 
 def getsimpiterlopp():
     pass

@@ -43,8 +43,7 @@ def initialization(obj):
 def turn_on(obj):
     if isinstance(obj[1], list):
         return loop_for_list_arg(misc.HVon,obj[1])
-    else:
-        return('OK', misc.HVon(obj[1]))
+    return('OK', misc.HVon(obj[1]))
 
 def turn_off(obj):
     if isinstance(obj[1], list):
@@ -53,7 +52,7 @@ def turn_off(obj):
 
 def setdac(obj):
     if isinstance(obj[1], list):
-     return loop_for_afe_list_arg(afedrv.SetDac,obj[1],obj[2],obj[3])
+        return loop_for_afe_list_arg(afedrv.SetDac,obj[1],obj[2],obj[3])
     return ('OK', afedrv.SetDac(obj[1],obj[2],obj[3]))
 
 def getsimpiterlopp():
@@ -78,7 +77,7 @@ class Ctlsrv():
         # Start server
         self.srvthread = None
         self.runflag = False
-        self.ip = self.lan.ifconfig()[0]
+        self.ip = None
     
     def getip(self):
         self.ip = self.lan.ifconfig()[0]
@@ -92,6 +91,9 @@ class Ctlsrv():
     @staticmethod
     def send_msg(cl, msg):
         cl.sendall((ujson.dumps(msg)).encode("utf8"))
+        
+    def get_IP(self):
+        print(self.lan.ifconfig())
 
     def srv_handle(self, port):
         addr = usocket.getaddrinfo('0.0.0.0', port)[0][-1]

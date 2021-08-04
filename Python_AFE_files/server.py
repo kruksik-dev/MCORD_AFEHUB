@@ -86,8 +86,6 @@ class Ctlsrv():
         self.getip()
         return 'AFE HUB %s' % (self.ip)
     
-    
-
     @staticmethod
     def send_msg(cl, msg):
         cl.sendall((ujson.dumps(msg)).encode("utf8"))

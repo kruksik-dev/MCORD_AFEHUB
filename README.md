@@ -10,7 +10,7 @@ In build file ` mpconfigboard.h ` has been changed:
 During build a micropython also `MICROPY_PY_LWIP=1` has been set up. 
 
 
-[Documentaion](https://afe-documentation.readthedocs.io/en/latest/)
+Documentation containing descriptions of the Hub's utility functions and instructions for initialization can be found [here](https://afe-documentation.readthedocs.io/en/latest/)
 
 
 

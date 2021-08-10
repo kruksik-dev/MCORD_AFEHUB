@@ -27,6 +27,8 @@ class Client:
             pass
 
     def temploop(self, afenum):
+        Client._csvwriter('output_data_temploop.csv', 'Date',
+                          'Time', 'AFE_number', 'Voltage_1', 'Voltage_2')
         while True:
             try:
                 v1 = self.do_cmd(['adc', afenum, 3])[1]

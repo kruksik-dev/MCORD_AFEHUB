@@ -73,15 +73,7 @@ def GetAdc(id, chn):
     elif chn == 6:
         AdcValue = (lst[3][6] << 8) | (lst[3][7] & 0xff)
         print("adc value of ch", chn, ":", AdcValue, "I")
-
-    print(hex(lst[3][0]))
-    print(hex(lst[3][1]))
-    print(hex(lst[3][2]))
-    print(hex(lst[3][3]))
-    print(hex(lst[3][4]))
-    print(hex(lst[3][5]))
-    print(hex(lst[3][6]))
-    print(hex(lst[3][7]))
+    return AdcValue
 
 
 def SetDacRAW(id, val1, val2):

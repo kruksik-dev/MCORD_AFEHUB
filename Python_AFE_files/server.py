@@ -58,6 +58,9 @@ def setdac(obj):
 def getsimpiterlopp():
     pass
 
+def getadc(obj):
+    return('OK',afedrv.GetAdc(obj[1],obj[2]))
+
 # Table of functions
 func = {
     'init': initialization,
@@ -66,6 +69,7 @@ func = {
     'setdac':setdac,
     'test':test_proper_connection,
     'getsimploop': getsimpiterlopp,
+    'adc':getadc
 }
 
 
